@@ -1,7 +1,7 @@
 ;; Copyright (C) 2010 Joost Diepenmaat, Zeekat Softwareontwikkeling
 ;;
 ;; Author: Joost Diepenmaat - joost@zeekat.nl
-;; Version: 0.1
+;; Version: 0.2 / 2010-06-05
 ;; Keywords: abbrev, convenience, slime
 ;; URL: http://github.com/joodie/slime-complete-locals
 ;; Compatibility: GNU Emacs 23.x
@@ -28,25 +28,30 @@
 ;; as well as the usual 'globally reachable' vars in the
 ;; inferior lisp
 
-;; to configure
-;; put this file somewhere in your load-path
-;; then
+;; to configure, put this file somewhere in your load-path then
 ;;
 ;; (slime-setup 
-;;  '(slime-fancy ;; optional, turns on fancy inspector, autodoc and other useful stuff
+;;  '(slime-fancy  ;; optional, turns on fancy stuff
 ;;   slime-company ;; optional, needs additional install
 ;;   slime-complete-locals)) 
 
-;; note that for this to work in the standard slime configuration,
-;; for now, you also need to set
-;; slime-complete-symbol-function to 'slime-simple-complete-symbol
+;; note that for this to work for now, you need to make sure your
+;; slime-complete-symbol-function is either
+;; slime-complete-symbol* (which is the default) or
+;; slime-simple-complete-symbol or some function that uses
+;;    slime-simple-completions or slime-completions
 ;;
-;; it will work "out of the box" with slime-company mode, though.
+;; slime-fuzzy-complete / slime-fuzzy-completions aren't yet supported
+;;
+;; this code will work "out of the box" with slime-company mode
 ;; see 
 ;; http://www.emacswiki.org/emacs/CompanyMode
 ;; and
 ;; http://www.emacswiki.org/emacs/CompanyModeBackends
-
+;;
+;; Also see
+;; http://joost.zeekat.nl/2010/06/04/slime-hints-3b-lexical-completions-also-a-correction/
+;;
 
 (setq slime-string-literal-regexp
   "\".*?[^\\]\"")
@@ -112,7 +117,13 @@
   ad-do-it
   (setq ad-return-value (slime-add-simple-local-completions prefix ad-return-value)))
 
+(defadvice slime-completions (around include-local-symbols (prefix))
+  "include symbols from the current top-level form in the completion suggestions"
+  ad-do-it
+  (setq ad-return-value (slime-add-simple-local-completions prefix ad-return-value)))
+
 (defun slime-complete-locals-init ()
-  (ad-activate 'slime-simple-completions))
+  (ad-activate 'slime-simple-completions)
+  (ad-activate 'slime-completions))
 
 (provide 'slime-complete-locals)
