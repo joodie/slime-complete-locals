@@ -21,32 +21,31 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-;; this code modifies the slime-simple-completions function
-;; to take into account any locally mentioned symbols
+;; This code advices some of the SLIME completion function
+;; to take into account any locally mentioned symbols.
 ;;
-;; that way function arguments and let bindings are expanded
+;; That way function arguments and let bindings are expanded
 ;; as well as the usual 'globally reachable' vars in the
-;; inferior lisp
+;; inferior lisp.
 
-;; to configure, put this file somewhere in your load-path then
+;; To configure, put this file somewhere in your load-path then
 ;;
-;; (slime-setup 
-;;  '(slime-fancy  ;; optional, turns on fancy stuff
-;;   slime-company ;; optional, needs additional install
-;;   slime-complete-locals)) 
+;;   (slime-setup 
+;;    '(slime-fancy  ;; optional, turns on fancy stuff
+;;      slime-company ;; optional, needs additional install
+;;      slime-complete-locals)) 
 
-;; note that for this to work for now, you need to make sure your
-;; slime-complete-symbol-function is either
-;; slime-complete-symbol* (which is the default) or
-;; slime-simple-complete-symbol or some function that uses
-;;    slime-simple-completions or slime-completions
+;; Note that for this to work, for now, you need to make sure your
+;; `slime-complete-symbol-function' is either `slime-complete-symbol*'
+;; (which is the default) or `slime-simple-complete-symbol' or some
+;; function that uses `slime-simple-completions' or
+;; `slime-completions', like the `slime-company' completion functions.
 ;;
-;; slime-fuzzy-complete / slime-fuzzy-completions aren't yet supported
+;; `slime-fuzzy-complete' / `slime-fuzzy-completions' aren't yet
+;; supported.
 ;;
-;; this code will work "out of the box" with slime-company mode
-;; see 
-;; http://www.emacswiki.org/emacs/CompanyMode
-;; and
+;; This code will work "out of the box" with `slime-company' mode:
+;; http://www.emacswiki.org/emacs/CompanyMode and
 ;; http://www.emacswiki.org/emacs/CompanyModeBackends
 ;;
 ;; Also see
