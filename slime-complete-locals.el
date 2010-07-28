@@ -76,6 +76,15 @@
         (push elem result)))
     (nreverse result)))
 
+(defun slime-count-list (list)
+  (let ((result '()))
+    (dolist (elem list)
+      (let ((cell (assoc elem result)))
+        (if cell
+            (setcdr cell (+ 1 (cdr cell)))
+          (setq result (cons (cons elem 1) result)))))
+    result))
+
 ;; this is pretty hackish. should be fairly quick, though
 (defun slime-local-symbols
   ()
@@ -91,7 +100,7 @@
         (replace-regexp slime-comment-regexp "")
         (beginning-of-buffer)
         (replace-regexp slime-not-a-symbol-regexp " ")
-        (slime-uniq-list (split-string (buffer-string)))))))
+        (slime-count-list (split-string (buffer-string)))))))
 
 (defun slime-filter (condp lst)
   (delq nil
@@ -99,10 +108,13 @@
 
 (defun slime-simple-local-completions (prefix)
   (let ((len (length prefix)))
-    (slime-filter (lambda (str) 
-                    (and (<= len (length x))
-                         (string= prefix (substring str 0 len))))
-                  (slime-local-symbols))))
+    (mapcar #'car (slime-filter (lambda (pair) 
+                     (let ((str (car pair))) 
+                       (and (or (not (string= prefix str)) ; if prefix only occors once
+                                (< 1 (cdr pair)))          ; ignore it
+                            (<= len (length str))
+                            (string= prefix (substring str 0 len)))))
+                   (slime-local-symbols)))))
 
 (defun slime-add-simple-local-completions (prefix lst)
   (cons 
