@@ -1,3 +1,5 @@
+;;; slime-complete-locals.el --- complete functions taking locally mentioned symbols into account
+
 ;; Copyright (C) 2010 Joost Diepenmaat, Zeekat Softwareontwikkeling
 ;;
 ;; Author: Joost Diepenmaat - joost@zeekat.nl
@@ -20,6 +22,8 @@
 ;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
 
 ;; This code advices some of the SLIME completion function
 ;; to take into account any locally mentioned symbols.
@@ -51,6 +55,8 @@
 ;; Also see
 ;; http://joost.zeekat.nl/2010/06/04/slime-hints-3b-lexical-completions-also-a-correction/
 ;;
+
+;;; Code:
 
 (setq slime-string-literal-regexp
   "\".*?[^\\]\"")
